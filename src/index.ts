@@ -13,6 +13,7 @@ import {
 } from "fastify-type-provider-zod";
 import z, { uuid } from "zod";
 
+import { NotFoundError } from "./errors/index.js";
 import { Weekday } from "./generated/prisma/enums.js";
 import { auth } from "./lib/auth.js";
 import { CreateWorkoutPlan } from "./usecases/CreateWourkoutPlan.js";
@@ -89,7 +90,6 @@ app.withTypeProvider<ZodTypeProvider>().route({
         }),
       ),
     }),
-
     response: {
       201: z.object({
         id: uuid(),
@@ -132,6 +132,10 @@ app.withTypeProvider<ZodTypeProvider>().route({
         error: z.string(),
         code: z.string(),
       }),
+      404: z.object({
+        error: z.string(),
+        code: z.string(),
+      }),
       500: z.object({
         error: z.string(),
         code: z.string(),
@@ -158,6 +162,12 @@ app.withTypeProvider<ZodTypeProvider>().route({
       return reply.status(201).send(result);
     } catch (error) {
       app.log.error(error);
+      if (error instanceof NotFoundError) {
+        return reply.status(404).send({
+          error: error.message,
+          code: "NOT_FOUND",
+        });
+      }
       return reply.status(500).send({
         error: "Internal server error",
         code: "INTERNAL_ERROR",
@@ -166,7 +176,7 @@ app.withTypeProvider<ZodTypeProvider>().route({
   },
 });
 
-    
+// Controller
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
@@ -183,10 +193,16 @@ app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
   url: "/",
   schema: {
-    hide: true,
+    description: "Hello world",
+    tags: ["Hello World"],
+    response: {
+      200: z.object({
+        message: z.string(),
+      }),
+    },
   },
   handler: async () => {
-    return { message: "API is running" };
+    return { message: "Hello World" };
   },
 });
 
@@ -200,6 +216,9 @@ app.route({
 
       // Convert Fastify headers to standard Headers object
       const headers = fromNodeHeaders(request.headers);
+      Object.entries(request.headers).forEach(([key, value]) => {
+        if (value) headers.append(key, value.toString());
+      });
       // Create Fetch API-compatible request
       const req = new Request(url.toString(), {
         method: request.method,
