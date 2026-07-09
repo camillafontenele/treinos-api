@@ -20,8 +20,18 @@ export type WorkoutDayModel = runtime.Types.Result.DefaultSelection<Prisma.$Work
 
 export type AggregateWorkoutDay = {
   _count: WorkoutDayCountAggregateOutputType | null
+  _avg: WorkoutDayAvgAggregateOutputType | null
+  _sum: WorkoutDaySumAggregateOutputType | null
   _min: WorkoutDayMinAggregateOutputType | null
   _max: WorkoutDayMaxAggregateOutputType | null
+}
+
+export type WorkoutDayAvgAggregateOutputType = {
+  estimatedDurationInSeconds: number | null
+}
+
+export type WorkoutDaySumAggregateOutputType = {
+  estimatedDurationInSeconds: number | null
 }
 
 export type WorkoutDayMinAggregateOutputType = {
@@ -30,6 +40,7 @@ export type WorkoutDayMinAggregateOutputType = {
   workoutPlanId: string | null
   isRest: boolean | null
   weekday: $Enums.Weekday | null
+  estimatedDurationInSeconds: number | null
   createdAt: Date | null
   updateAt: Date | null
 }
@@ -40,6 +51,7 @@ export type WorkoutDayMaxAggregateOutputType = {
   workoutPlanId: string | null
   isRest: boolean | null
   weekday: $Enums.Weekday | null
+  estimatedDurationInSeconds: number | null
   createdAt: Date | null
   updateAt: Date | null
 }
@@ -50,11 +62,20 @@ export type WorkoutDayCountAggregateOutputType = {
   workoutPlanId: number
   isRest: number
   weekday: number
+  estimatedDurationInSeconds: number
   createdAt: number
   updateAt: number
   _all: number
 }
 
+
+export type WorkoutDayAvgAggregateInputType = {
+  estimatedDurationInSeconds?: true
+}
+
+export type WorkoutDaySumAggregateInputType = {
+  estimatedDurationInSeconds?: true
+}
 
 export type WorkoutDayMinAggregateInputType = {
   id?: true
@@ -62,6 +83,7 @@ export type WorkoutDayMinAggregateInputType = {
   workoutPlanId?: true
   isRest?: true
   weekday?: true
+  estimatedDurationInSeconds?: true
   createdAt?: true
   updateAt?: true
 }
@@ -72,6 +94,7 @@ export type WorkoutDayMaxAggregateInputType = {
   workoutPlanId?: true
   isRest?: true
   weekday?: true
+  estimatedDurationInSeconds?: true
   createdAt?: true
   updateAt?: true
 }
@@ -82,6 +105,7 @@ export type WorkoutDayCountAggregateInputType = {
   workoutPlanId?: true
   isRest?: true
   weekday?: true
+  estimatedDurationInSeconds?: true
   createdAt?: true
   updateAt?: true
   _all?: true
@@ -125,6 +149,18 @@ export type WorkoutDayAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: WorkoutDayAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: WorkoutDaySumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: WorkoutDayMinAggregateInputType
@@ -155,6 +191,8 @@ export type WorkoutDayGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   _count?: WorkoutDayCountAggregateInputType | true
+  _avg?: WorkoutDayAvgAggregateInputType
+  _sum?: WorkoutDaySumAggregateInputType
   _min?: WorkoutDayMinAggregateInputType
   _max?: WorkoutDayMaxAggregateInputType
 }
@@ -165,9 +203,12 @@ export type WorkoutDayGroupByOutputType = {
   workoutPlanId: string
   isRest: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt: Date
   updateAt: Date
   _count: WorkoutDayCountAggregateOutputType | null
+  _avg: WorkoutDayAvgAggregateOutputType | null
+  _sum: WorkoutDaySumAggregateOutputType | null
   _min: WorkoutDayMinAggregateOutputType | null
   _max: WorkoutDayMaxAggregateOutputType | null
 }
@@ -196,6 +237,7 @@ export type WorkoutDayWhereInput = {
   workoutPlanId?: Prisma.StringFilter<"WorkoutDay"> | string
   isRest?: Prisma.BoolFilter<"WorkoutDay"> | boolean
   weekday?: Prisma.EnumWeekdayFilter<"WorkoutDay"> | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFilter<"WorkoutDay"> | number
   createdAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
   updateAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
   workoutPlan?: Prisma.XOR<Prisma.WorkoutPlanScalarRelationFilter, Prisma.WorkoutPlanWhereInput>
@@ -208,6 +250,7 @@ export type WorkoutDayOrderByWithRelationInput = {
   workoutPlanId?: Prisma.SortOrder
   isRest?: Prisma.SortOrder
   weekday?: Prisma.SortOrder
+  estimatedDurationInSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
   workoutPlan?: Prisma.WorkoutPlanOrderByWithRelationInput
@@ -223,6 +266,7 @@ export type WorkoutDayWhereUniqueInput = Prisma.AtLeast<{
   workoutPlanId?: Prisma.StringFilter<"WorkoutDay"> | string
   isRest?: Prisma.BoolFilter<"WorkoutDay"> | boolean
   weekday?: Prisma.EnumWeekdayFilter<"WorkoutDay"> | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFilter<"WorkoutDay"> | number
   createdAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
   updateAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
   workoutPlan?: Prisma.XOR<Prisma.WorkoutPlanScalarRelationFilter, Prisma.WorkoutPlanWhereInput>
@@ -235,11 +279,14 @@ export type WorkoutDayOrderByWithAggregationInput = {
   workoutPlanId?: Prisma.SortOrder
   isRest?: Prisma.SortOrder
   weekday?: Prisma.SortOrder
+  estimatedDurationInSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
   _count?: Prisma.WorkoutDayCountOrderByAggregateInput
+  _avg?: Prisma.WorkoutDayAvgOrderByAggregateInput
   _max?: Prisma.WorkoutDayMaxOrderByAggregateInput
   _min?: Prisma.WorkoutDayMinOrderByAggregateInput
+  _sum?: Prisma.WorkoutDaySumOrderByAggregateInput
 }
 
 export type WorkoutDayScalarWhereWithAggregatesInput = {
@@ -251,6 +298,7 @@ export type WorkoutDayScalarWhereWithAggregatesInput = {
   workoutPlanId?: Prisma.StringWithAggregatesFilter<"WorkoutDay"> | string
   isRest?: Prisma.BoolWithAggregatesFilter<"WorkoutDay"> | boolean
   weekday?: Prisma.EnumWeekdayWithAggregatesFilter<"WorkoutDay"> | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntWithAggregatesFilter<"WorkoutDay"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkoutDay"> | Date | string
   updateAt?: Prisma.DateTimeWithAggregatesFilter<"WorkoutDay"> | Date | string
 }
@@ -260,6 +308,7 @@ export type WorkoutDayCreateInput = {
   name: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
   workoutPlan: Prisma.WorkoutPlanCreateNestedOneWithoutWorkoutDaysInput
@@ -272,6 +321,7 @@ export type WorkoutDayUncheckedCreateInput = {
   workoutPlanId: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
   exercises?: Prisma.WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutDayInput
@@ -282,6 +332,7 @@ export type WorkoutDayUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workoutPlan?: Prisma.WorkoutPlanUpdateOneRequiredWithoutWorkoutDaysNestedInput
@@ -294,6 +345,7 @@ export type WorkoutDayUncheckedUpdateInput = {
   workoutPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exercises?: Prisma.WorkoutExerciseUncheckedUpdateManyWithoutWorkoutDayNestedInput
@@ -305,6 +357,7 @@ export type WorkoutDayCreateManyInput = {
   workoutPlanId: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
 }
@@ -314,6 +367,7 @@ export type WorkoutDayUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -324,6 +378,7 @@ export type WorkoutDayUncheckedUpdateManyInput = {
   workoutPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -344,8 +399,13 @@ export type WorkoutDayCountOrderByAggregateInput = {
   workoutPlanId?: Prisma.SortOrder
   isRest?: Prisma.SortOrder
   weekday?: Prisma.SortOrder
+  estimatedDurationInSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
+}
+
+export type WorkoutDayAvgOrderByAggregateInput = {
+  estimatedDurationInSeconds?: Prisma.SortOrder
 }
 
 export type WorkoutDayMaxOrderByAggregateInput = {
@@ -354,6 +414,7 @@ export type WorkoutDayMaxOrderByAggregateInput = {
   workoutPlanId?: Prisma.SortOrder
   isRest?: Prisma.SortOrder
   weekday?: Prisma.SortOrder
+  estimatedDurationInSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
 }
@@ -364,8 +425,13 @@ export type WorkoutDayMinOrderByAggregateInput = {
   workoutPlanId?: Prisma.SortOrder
   isRest?: Prisma.SortOrder
   weekday?: Prisma.SortOrder
+  estimatedDurationInSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
+}
+
+export type WorkoutDaySumOrderByAggregateInput = {
+  estimatedDurationInSeconds?: Prisma.SortOrder
 }
 
 export type WorkoutDayScalarRelationFilter = {
@@ -419,6 +485,14 @@ export type EnumWeekdayFieldUpdateOperationsInput = {
   set?: $Enums.Weekday
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type WorkoutDayCreateNestedOneWithoutExercisesInput = {
   create?: Prisma.XOR<Prisma.WorkoutDayCreateWithoutExercisesInput, Prisma.WorkoutDayUncheckedCreateWithoutExercisesInput>
   connectOrCreate?: Prisma.WorkoutDayCreateOrConnectWithoutExercisesInput
@@ -438,6 +512,7 @@ export type WorkoutDayCreateWithoutWorkoutPlanInput = {
   name: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
   exercises?: Prisma.WorkoutExerciseCreateNestedManyWithoutWorkoutDayInput
@@ -448,6 +523,7 @@ export type WorkoutDayUncheckedCreateWithoutWorkoutPlanInput = {
   name: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
   exercises?: Prisma.WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutDayInput
@@ -488,6 +564,7 @@ export type WorkoutDayScalarWhereInput = {
   workoutPlanId?: Prisma.StringFilter<"WorkoutDay"> | string
   isRest?: Prisma.BoolFilter<"WorkoutDay"> | boolean
   weekday?: Prisma.EnumWeekdayFilter<"WorkoutDay"> | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFilter<"WorkoutDay"> | number
   createdAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
   updateAt?: Prisma.DateTimeFilter<"WorkoutDay"> | Date | string
 }
@@ -497,6 +574,7 @@ export type WorkoutDayCreateWithoutExercisesInput = {
   name: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
   workoutPlan: Prisma.WorkoutPlanCreateNestedOneWithoutWorkoutDaysInput
@@ -508,6 +586,7 @@ export type WorkoutDayUncheckedCreateWithoutExercisesInput = {
   workoutPlanId: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
 }
@@ -533,6 +612,7 @@ export type WorkoutDayUpdateWithoutExercisesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workoutPlan?: Prisma.WorkoutPlanUpdateOneRequiredWithoutWorkoutDaysNestedInput
@@ -544,6 +624,7 @@ export type WorkoutDayUncheckedUpdateWithoutExercisesInput = {
   workoutPlanId?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -553,6 +634,7 @@ export type WorkoutDayCreateManyWorkoutPlanInput = {
   name: string
   isRest?: boolean
   weekday: $Enums.Weekday
+  estimatedDurationInSeconds: number
   createdAt?: Date | string
   updateAt?: Date | string
 }
@@ -562,6 +644,7 @@ export type WorkoutDayUpdateWithoutWorkoutPlanInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exercises?: Prisma.WorkoutExerciseUpdateManyWithoutWorkoutDayNestedInput
@@ -572,6 +655,7 @@ export type WorkoutDayUncheckedUpdateWithoutWorkoutPlanInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exercises?: Prisma.WorkoutExerciseUncheckedUpdateManyWithoutWorkoutDayNestedInput
@@ -582,6 +666,7 @@ export type WorkoutDayUncheckedUpdateManyWithoutWorkoutPlanInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isRest?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  estimatedDurationInSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updateAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -623,6 +708,7 @@ export type WorkoutDaySelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   workoutPlanId?: boolean
   isRest?: boolean
   weekday?: boolean
+  estimatedDurationInSeconds?: boolean
   createdAt?: boolean
   updateAt?: boolean
   workoutPlan?: boolean | Prisma.WorkoutPlanDefaultArgs<ExtArgs>
@@ -636,6 +722,7 @@ export type WorkoutDaySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   workoutPlanId?: boolean
   isRest?: boolean
   weekday?: boolean
+  estimatedDurationInSeconds?: boolean
   createdAt?: boolean
   updateAt?: boolean
   workoutPlan?: boolean | Prisma.WorkoutPlanDefaultArgs<ExtArgs>
@@ -647,6 +734,7 @@ export type WorkoutDaySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   workoutPlanId?: boolean
   isRest?: boolean
   weekday?: boolean
+  estimatedDurationInSeconds?: boolean
   createdAt?: boolean
   updateAt?: boolean
   workoutPlan?: boolean | Prisma.WorkoutPlanDefaultArgs<ExtArgs>
@@ -658,11 +746,12 @@ export type WorkoutDaySelectScalar = {
   workoutPlanId?: boolean
   isRest?: boolean
   weekday?: boolean
+  estimatedDurationInSeconds?: boolean
   createdAt?: boolean
   updateAt?: boolean
 }
 
-export type WorkoutDayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "workoutPlanId" | "isRest" | "weekday" | "createdAt" | "updateAt", ExtArgs["result"]["workoutDay"]>
+export type WorkoutDayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "workoutPlanId" | "isRest" | "weekday" | "estimatedDurationInSeconds" | "createdAt" | "updateAt", ExtArgs["result"]["workoutDay"]>
 export type WorkoutDayInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   workoutPlan?: boolean | Prisma.WorkoutPlanDefaultArgs<ExtArgs>
   exercises?: boolean | Prisma.WorkoutDay$exercisesArgs<ExtArgs>
@@ -687,6 +776,7 @@ export type $WorkoutDayPayload<ExtArgs extends runtime.Types.Extensions.Internal
     workoutPlanId: string
     isRest: boolean
     weekday: $Enums.Weekday
+    estimatedDurationInSeconds: number
     createdAt: Date
     updateAt: Date
   }, ExtArgs["result"]["workoutDay"]>
@@ -1119,6 +1209,7 @@ export interface WorkoutDayFieldRefs {
   readonly workoutPlanId: Prisma.FieldRef<"WorkoutDay", 'String'>
   readonly isRest: Prisma.FieldRef<"WorkoutDay", 'Boolean'>
   readonly weekday: Prisma.FieldRef<"WorkoutDay", 'Weekday'>
+  readonly estimatedDurationInSeconds: Prisma.FieldRef<"WorkoutDay", 'Int'>
   readonly createdAt: Prisma.FieldRef<"WorkoutDay", 'DateTime'>
   readonly updateAt: Prisma.FieldRef<"WorkoutDay", 'DateTime'>
 }
